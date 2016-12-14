@@ -21,7 +21,7 @@ class Shell
      */
     public function flatCopy($from, $to)
     {
-        exec('cp ' . $from . '/* ' . $to . '/.');
+        exec('cp ' . $from . '\\* ' . $to . '/.');
     }
 
     /**
