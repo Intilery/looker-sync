@@ -67,7 +67,7 @@ class Init
 
 
         // Verify the WebHook request was real
-        //new WebHook($this->repository);
+        new WebHook($this->repository);
     }
 
     /**
