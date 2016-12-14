@@ -3,6 +3,7 @@
 use Intilery\Github\Repository;
 use Intilery\Github\Manager;
 use Intilery\Github\Shell;
+use Intilery\Github\WebHook;
 
 /**
  * Class Init
@@ -63,6 +64,10 @@ class Init
         $this->manager = new Manager(
             $this->repository
         );
+
+
+        // Verify the WebHook request was real
+        //new WebHook($this->repository);
     }
 
     /**
@@ -70,8 +75,12 @@ class Init
      */
     public function process()
     {
-        $this->shell->delete($this->repository->getPath());
-        $this->manager->_clone();
+        if (!$this->shell->exists($this->repository->getPath())) {
+            $this->manager->_clone();
+        } else {
+            $this->manager->_reset();
+            $this->manager->_pull();
+        }
 
         foreach ($this->children as $repo) {
             $repository = new Repository(
@@ -82,9 +91,16 @@ class Init
                 null,
                 $repo->replaces
             );
+
             $manager = new Manager($repository);
-            $this->shell->delete($repository->getPath());
-            $manager->_clone();
+
+            if (!$this->shell->exists($repository->getPath())) {
+                $manager->_clone();
+            } else {
+                $manager->_reset();
+                $manager->_pull();
+            }
+
             $this->shell->flatCopy($this->repository->getPath(), $repository->getPath());
             if (!empty($repository->getReplaces())) {
                 $this->shell->findReplace($repository->getPath(), $repository->getReplaces());

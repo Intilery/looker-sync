@@ -27,11 +27,14 @@ class WebHook
      */
     public function __construct(Repository $repository)
     {
-        $this->$repository = $repository;
+        $this->repository = $repository;
         if (!$this->validateHeaders()) {
-            die('Invalid headers');
+            $this->error('Invalid headers');
         }
-        $this->decodeBody();
+
+        if (!$this->decodeBody()) {
+            $this->error('Unabled to decode body');
+        }
     }
 
     /**
@@ -44,10 +47,11 @@ class WebHook
         } elseif ('application/x-www-form-urlencoded' == $_SERVER['HTTP_CONTENT_TYPE']) {
             $json = $_POST['payload'];
         } else {
-            die('Unabled to decode body');
+            return false;
         }
 
         $this->payload = json_decode($json);
+        return true;
     }
 
     /**
@@ -55,6 +59,10 @@ class WebHook
      */
     private function validateHeaders()
     {
+        if (empty($_SERVER['HTTP_CONTENT_TYPE']) || empty($_SERVER['HTTP_X_GITHUB_EVENT'])) {
+            return false;
+        }
+
         if ('ping' == $_SERVER['HTTP_X_GITHUB_EVENT']) {
             echo 'pong';
             return false;
@@ -75,5 +83,17 @@ class WebHook
                 return false;
             }
         };
+
+        return true;
+    }
+
+    /**
+     * @param $message
+     * @param int $code
+     */
+    private function error($message, $code = 400) {
+        http_response_code($code);
+        echo $message;
+        die();
     }
 }
