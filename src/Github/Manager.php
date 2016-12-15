@@ -42,6 +42,16 @@ class Manager
     }
 
     /**
+     * @return mixed
+     */
+    public function _clean() {
+        return $this->__execute(
+            "cd " . $this->repository->getPath() . ";" .
+            "git clean -f"
+        );
+    }
+
+    /**
      * @param $message
      * @return mixed
      */
@@ -103,20 +113,13 @@ class Manager
 
     /**
      * @param $command
-     * @param bool $sshHack
      * @return mixed
      */
-    private function __execute($command, $sshHack = true)
+    private function __execute($command)
     {
-        // Bit of a hack (understatement), but it works
-        if ($sshHack) {
-            $command =
-                "ssh-keyscan -H github.com >> ~/.ssh/known_hosts;" .
-                "ssh-agent bash -c 'ssh-add " . $this->repository->getKeyPath() . ";" .
-                $command;
-        }
-
         exec(
+            "ssh-keyscan -H github.com >> ~/.ssh/known_hosts;" .
+            "ssh-agent bash -c 'ssh-add " . $this->repository->getKeyPath() . ";" .
             $command . "' 2>&1",
             $out,
             $var

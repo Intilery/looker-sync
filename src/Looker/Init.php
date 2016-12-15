@@ -42,6 +42,7 @@ class Init
     public function __construct()
     {
         $this->shell = new Shell();
+
         $this->loadConfig();
         $this->loadMaster();
         $this->process();
@@ -65,7 +66,6 @@ class Init
             $this->repository
         );
 
-
         // Verify the WebHook request was real
         new WebHook($this->repository);
     }
@@ -78,6 +78,7 @@ class Init
         if (!$this->shell->exists($this->repository->getPath())) {
             $this->manager->_clone();
         } else {
+            $this->manager->_clean();
             $this->manager->_reset();
             $this->manager->_pull();
         }
@@ -92,11 +93,14 @@ class Init
                 $repo->replaces
             );
 
-            $manager = new Manager($repository);
+            $manager = new Manager(
+                $repository
+            );
 
             if (!$this->shell->exists($repository->getPath())) {
                 $manager->_clone();
             } else {
+                $manager->_clean();
                 $manager->_reset();
                 $manager->_pull();
             }
@@ -108,10 +112,7 @@ class Init
             $manager->_add();
             $manager->_commit("Auto sync from base");
             $manager->_push("origin", "master");
-            //$this->shell->delete($repository->getPath());
         }
-
-        //$this->shell->delete($this->repository->getPath());
     }
 
     /**

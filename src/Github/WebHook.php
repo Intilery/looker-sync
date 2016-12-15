@@ -38,7 +38,7 @@ class WebHook
     }
 
     /**
-     *
+     * @return bool
      */
     private function decodeBody()
     {
@@ -55,7 +55,7 @@ class WebHook
     }
 
     /**
-     *
+     * @return bool
      */
     private function validateHeaders()
     {
