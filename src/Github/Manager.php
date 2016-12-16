@@ -78,7 +78,7 @@ class Manager
      * @param $branch
      * @return mixed
      */
-    public function _push($remote = 'upstream', $branch = 'master')
+    public function _push($remote = 'upstream', $branch = 'origin')
     {
         return $this->__execute(
             "cd " . $this->repository->getPath() . ";" .
@@ -103,7 +103,7 @@ class Manager
      * @param $branch
      * @return mixed
      */
-    public function _pull($remote = 'upstream', $branch = 'master')
+    public function _pull($remote = 'upstream', $branch = 'origin')
     {
         return $this->__execute(
             "cd " . $this->repository->getPath() . ";" .
