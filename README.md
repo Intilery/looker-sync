@@ -38,7 +38,10 @@ Create a `sync.json` containing your project configuration which should look som
       "username": "GITHUB_USERNAME",
       "project":  "GITHUB_PROJECT",
       "keypath":  "PATH_TO_SSH_KEY",
-      "repopath": "PATH_TO_CLONE_PROJECT_TO"
+      "repopath": "PATH_TO_CLONE_PROJECT_TO",
+      "replaces": {
+        "from": "to"
+      }
     }
     ...
     ...
@@ -50,7 +53,7 @@ Create a `sync.json` containing your project configuration which should look som
 
 ### 2. Creating your Deployment Keys
 
-Under unix, to create your deployment keys simply run:
+In a nix environment to create your deployment keys simply run:
 
 ```
 $ ssh-keygen -f /my/file/path/key.rsa -t rsa -N ''
@@ -61,7 +64,7 @@ The master project requires read permissions, but all the children require read/
 
 ### 3. Set-up your Webhook
 
-Goto the Github repository you want to trigger the hook from and point it at the public directory. Your keys will need to 
+Go to the Github repository you want to trigger the hook from and point it at the public folder which should be the only folder exposed by the HTTP server. Your keys will need to 
 be bound to the user bound to the http client .e.g `apache`, `www-data`, etc
 
 ### 4. Cron Job Alternative
@@ -77,7 +80,13 @@ keys to the crontab user and add the following to your crontab:
 ### 5. Placeholders
 
 If you want to have repository specific variables then in the children of your `sync.json` you can specify "replaces" which
-will simply find and replace values.
+will simply find and replace values. It's the basic principal of key is the find and value is the replace e.g.
+
+```
+"replaces": {
+  "from": "to"
+}
+```
 
 ### 6. Hacky things
 
