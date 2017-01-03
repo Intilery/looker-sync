@@ -77,7 +77,7 @@ Once you have the project checked out you will need to run the following:
 $ php -f composer.phar install
 ```
 
-If there are any updated to the project simply run or create a git hook with the following:
+If there are any updates to this project simply either run or create a git hook with the following:
 
 ```
 $ php -f composer.phar update
